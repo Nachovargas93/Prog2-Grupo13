@@ -1,7 +1,5 @@
 package Modelo;
 
-
-
 public class Libro {
     
     private String Editorial;
@@ -55,9 +53,5 @@ public class Libro {
     }
 
   
-    
-    
-    
-    
     
 }

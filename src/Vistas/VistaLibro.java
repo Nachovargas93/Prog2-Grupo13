@@ -1,6 +1,8 @@
 package Vistas;
 
+import Modelo.Cliente;
 import Modelo.Libro;
+import Modelo.Usuario;
 import Modelo.export_excel;
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +20,11 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
-
 public class VistaLibro extends javax.swing.JFrame {
+    
     private final DefaultTableModel  modelo1;
+    private Cliente cliente;
+    private double importe = 0;
 
     private final String Datos[][] = {};
     private final String[] Encabezado1 = {"Editorial", "Título", "Precio", "Unidad", "SubTotal"};
@@ -31,11 +35,12 @@ public class VistaLibro extends javax.swing.JFrame {
     private static int tabla_ancho = 0;
     private static int tabla_alto = 0;
     
-    public VistaLibro() {
+    public VistaLibro(Usuario usr) {
         initComponents();
         modelo1 = new DefaultTableModel(Datos, Encabezado1);
         jTable1.setModel(modelo1);
-    
+        lblUsuario.setText(usr.toString());
+        
     }
     
     
@@ -61,6 +66,9 @@ public class VistaLibro extends javax.swing.JFrame {
         lbl = new javax.swing.JLabel();
         ExportarTabla = new javax.swing.JButton();
         ImportarTabla = new javax.swing.JButton();
+        lblUsuario = new javax.swing.JLabel();
+        BtnComprar = new javax.swing.JButton();
+        BtnCarrito = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,6 +81,12 @@ public class VistaLibro extends javax.swing.JFrame {
         txtEditorial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtEditorialActionPerformed(evt);
+            }
+        });
+
+        txtPrecio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrecioActionPerformed(evt);
             }
         });
 
@@ -134,6 +148,20 @@ public class VistaLibro extends javax.swing.JFrame {
             }
         });
 
+        BtnComprar.setText("Comprar");
+        BtnComprar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnComprarActionPerformed(evt);
+            }
+        });
+
+        BtnCarrito.setText("Carrito");
+        BtnCarrito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnCarritoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,8 +191,10 @@ public class VistaLibro extends javax.swing.JFrame {
                                 .addGap(15, 15, 15)
                                 .addComponent(txtUnidad)))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 592, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(BtnGuardar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -175,14 +205,19 @@ public class VistaLibro extends javax.swing.JFrame {
                         .addComponent(lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(ExportarTabla)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(ImportarTabla)
-                        .addGap(81, 81, 81))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnComprar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnCarrito)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -203,26 +238,28 @@ public class VistaLibro extends javax.swing.JFrame {
                             .addComponent(txtUnidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(BtnGuardar)
-                            .addComponent(BtnEliminar)
-                            .addComponent(BtnTotal)
-                            .addComponent(lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ExportarTabla)
-                            .addComponent(ImportarTabla)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(BtnGuardar)
+                                .addComponent(BtnEliminar)
+                                .addComponent(BtnTotal))
+                            .addComponent(BtnCarrito)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ExportarTabla)
+                                .addComponent(ImportarTabla)
+                                .addComponent(BtnComprar)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
+        try {
         Libro libro = new Libro(txtEditorial.getText(), txtTitulo.getText(), Double.parseDouble(txtPrecio.getText()), Integer.parseInt(txtUnidad.getText()));
         String[] Datos = {libro.getEditorial(), libro.getTitulo(), String.valueOf(libro.getPrecio()), String.valueOf(libro.getUnidad()), String.valueOf(libro.getPrecio()*libro.getUnidad())};
         modelo1.addRow(Datos);
@@ -230,6 +267,14 @@ public class VistaLibro extends javax.swing.JFrame {
         txtTitulo.setText("");
         txtPrecio.setText("");
         txtUnidad.setText("");
+        }catch (NumberFormatException e) {
+          
+        JOptionPane.showMessageDialog(this, "Error, solo se pueden ingresar numeros en el apartado de Precio/Cantidad",
+        "Error en la Entrada", JOptionPane.ERROR_MESSAGE);
+        txtPrecio.setText("");
+        txtUnidad.setText("");
+        }
+            
     }//GEN-LAST:event_BtnGuardarActionPerformed
 
     private void txtEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEditorialActionPerformed
@@ -291,6 +336,27 @@ public class VistaLibro extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_ImportarTablaActionPerformed
+
+    private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrecioActionPerformed
+
+    private void BtnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnComprarActionPerformed
+        int cantidad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el precio del libro:"));
+        System.out.println(cantidad);
+        System.out.println(modelo1.getValueAt(jTable1.getSelectedRow(), 3));
+        if (cantidad <= (int) modelo1.getValueAt(jTable1.getSelectedRow(), 3)) {
+            importe += (double) modelo1.getValueAt(jTable1.getSelectedRow(), 2) * cantidad;
+        }
+        
+    }//GEN-LAST:event_BtnComprarActionPerformed
+
+    private void BtnCarritoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCarritoActionPerformed
+        this.cliente.setImporte(importe);
+        VistaCliente vc = new VistaCliente();
+        vc.setVisible(true);
+    }//GEN-LAST:event_BtnCarritoActionPerformed
+    
     
     public void CrearTabla(File file) throws IOException {
 
@@ -327,37 +393,12 @@ public class VistaLibro extends javax.swing.JFrame {
         }
     }
     
-    public static void main(String args[]) {
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VistaLibro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VistaLibro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VistaLibro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VistaLibro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new VistaLibro().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnCarrito;
+    private javax.swing.JButton BtnComprar;
     private javax.swing.JButton BtnEliminar;
     private javax.swing.JButton BtnGuardar;
     private javax.swing.JButton BtnTotal;
@@ -371,6 +412,7 @@ public class VistaLibro extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lbl;
+    private javax.swing.JLabel lblUsuario;
     private javax.swing.JTextField txtEditorial;
     private javax.swing.JTextField txtPrecio;
     private javax.swing.JTextField txtTitulo;
